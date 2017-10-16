@@ -5,4 +5,5 @@
     <string name="comprimida">COMPRIMIDA</string>
     <string name="no_size">0 MB</string>
     <string name="enviar_para_o_servidor">Enviar para o servidor</string>
+    <string name="aguarde">Aguarde</string>
 </resources>

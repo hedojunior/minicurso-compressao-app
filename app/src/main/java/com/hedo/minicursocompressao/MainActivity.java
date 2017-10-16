@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,7 +27,6 @@ import org.androidannotations.annotations.ViewById;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DecimalFormat;
 
 import id.zelory.compressor.Compressor;
 import retrofit2.Call;
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements Callback<String> 
     @ViewById(R.id.download_ibt)
     ImageButton downloadIbt;
 
-    ProgressDialog dialog;
+    ProgressDialog loader;
 
     MainConsumer consumer;
 
@@ -79,9 +77,7 @@ public class MainActivity extends AppCompatActivity implements Callback<String> 
 
     @Click(R.id.non_compressed_image_imv)
     protected void pickImage() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE);
+        //TODO: Implementar intent para busca de imagem no dispositivo
     }
 
     @Click(R.id.upload_ibt)
@@ -147,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements Callback<String> 
     @Background
     void compressImage(Uri uri) {
         try {
-            dialog.setMessage("Comprimindo imagem...");
             compressedImage = new Compressor(this)
                     .setMaxWidth(170)
                     .setMaxHeight(200)
@@ -170,19 +165,37 @@ public class MainActivity extends AppCompatActivity implements Callback<String> 
         textView.setText(FileUtil.getReadableFileSize(bitmap.getByteCount()));
     }
 
+    /**
+     * Mostra um toast com mensagem de erro genérica.
+     */
     void showErrorToast() {
-        Toast.makeText(this, "Erro ao buscar imagem, tente novamente.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Ocorreu um erro, tente a operação novamente.", Toast.LENGTH_LONG).show();
     }
 
+    /**
+     *
+     * Mostra um toast com uma mensagem de erro ao usuário.
+     *
+     * @param errorMessage String mensagem específica de erro.
+     */
     void showErrorToast(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     *
+     * Método utilitário para mostrar ou esconder o loader que ocupa a tela inteira
+     *
+     * https://developer.android.com/reference/android/app/ProgressDialog.html
+     *
+     * @param shouldShow boolean indica se o loader deve ou não ser mostrado.
+     * @param message String mensagem mostrada no loader, abaixo do título.
+     */
     void toggleLoader(boolean shouldShow, String message) {
-        if (dialog == null || shouldShow) {
-            dialog = ProgressDialog.show(this, "Aguarde", message, true, false);
+        if (loader == null || shouldShow) {
+            loader = ProgressDialog.show(this, getString(R.string.aguarde), message, true, false);
         } else if (!shouldShow) {
-            dialog.dismiss();
+            loader.dismiss();
         }
     }
 
