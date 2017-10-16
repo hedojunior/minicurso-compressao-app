@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MinicursoCompressao</string>
+    <string name="normal">NORMAL</string>
+    <string name="tamanho_nao_comprimida">0 MB</string>
+    <string name="comprimida">COMPRIMIDA</string>
+    <string name="no_size">0 MB</string>
+    <string name="enviar_para_o_servidor">Enviar para o servidor</string>
+</resources>
