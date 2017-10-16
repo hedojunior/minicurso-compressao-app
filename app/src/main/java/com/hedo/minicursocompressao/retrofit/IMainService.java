@@ -11,8 +11,8 @@ import retrofit2.http.Query;
  * Criado por hedo.junior em 14/10/2017.
  */
 
-public interface IMainService {
-    String URL_BASE = "http://192.168.25.107:8080/";
+interface IMainService {
+    String URL_BASE = "http://url.da.api/";
 
     @FormUrlEncoded
     @POST("image")

@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity implements Callback<String> 
 
     private final static int PICK_IMAGE = 10;
 
+    /*
+        Essa anotação é o equivalente a:
+        nonCompressedImageSizeTv = (TextView) findViewById(R.id.non_compressed_image_size_tv)
+     */
     @ViewById(R.id.non_compressed_image_size_tv)
     TextView nonCompressedImageSizeTv;
 
@@ -70,11 +74,22 @@ public class MainActivity extends AppCompatActivity implements Callback<String> 
 
     String fileName;
 
+    /**
+     * Usando a biblioteca AndroidAnnotations, não é necessário sobrescrever o método onCreate.
+     * a anotação @AfterViews avisa ao AndroidAnnotations que o código dentro do método anotado
+     * por ela deve ser executado após a criação da activity e o vínculo das Views do layout
+     * à ela (os findViewById), que são feitos automaticamente apenas utilizando a anotação
+     * @ViewById passando o identificador da view como parâmetro.
+     */
     @AfterViews
     void init() {
-        consumer = new MainConsumer();
+        //TODO: instanciar classe consumidora da API
     }
 
+    /*
+        Essa anotação é equivalente a:
+            nonCompressedImageImV.setOnClickListener(new OnClick...)
+     */
     @Click(R.id.non_compressed_image_imv)
     protected void pickImage() {
         //TODO: Implementar intent para busca de imagem no dispositivo
@@ -82,82 +97,39 @@ public class MainActivity extends AppCompatActivity implements Callback<String> 
 
     @Click(R.id.upload_ibt)
     protected void uploadImage() {
-        if (compressedImage != null) {
-            toggleLoader(true, "Fazendo upload da imagem...");
-            String base64 = Base64Util.bitmapToBase64(compressedImage);
-            consumer.uploadImage(base64).enqueue(this);
-        }
+        //TODO: Transformar a imagem em Base64 e enviar para o servidor
     }
 
     @Click(R.id.download_ibt)
     protected void downloadImage() {
-        if (fileName != null) {
-            toggleLoader(true, "Baixando imagem...");
-            consumer.getImage(fileName).enqueue(new Callback<String>() {
-                @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-                    Bitmap bitmap = Base64Util.base64ToBitmap(response.body());
-                    downloadedImageImV.setImageBitmap(bitmap);
-                    downloadedImageImV.setVisibility(View.VISIBLE);
-                    toggleLoader(false, null);
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    showErrorToast(t.getMessage());
-                    toggleLoader(false, null);
-                }
-            });
-        }
+        //TODO: Implementar o download da imagem do servidor
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-                showErrorToast();
-                return;
-            }
-
-            toggleLoader(true, "Processando imagem...");
-            parseAndDisplayImage(data.getData());
-            compressImage(data.getData());
-        }
+        //TODO: implementar lógica de tratamento do retorno da galeria e compressão da imagem
     }
 
     @Background
     void parseAndDisplayImage(Uri data) {
-        try {
-            InputStream stream = this.getContentResolver().openInputStream(data);
-            Bitmap bitmap = BitmapFactory.decodeStream(stream);
-            setImage(bitmap, nonCompressedImV, nonCompressedImageSizeTv);
-
-        } catch (FileNotFoundException e) {
-            showErrorToast();
-            e.printStackTrace();
-        }
+        //TODO: Transformar a Uri que retorna em uma Bitmap
     }
 
     @Background
     void compressImage(Uri uri) {
-        try {
-            compressedImage = new Compressor(this)
-                    .setMaxWidth(170)
-                    .setMaxHeight(200)
-                    .setQuality(90)
-                    .setCompressFormat(Bitmap.CompressFormat.WEBP)
-                    .compressToBitmap(FileUtil.from(this, uri));
-
-            setImage(compressedImage, compressedImV, compressedImageSizeTv);
-            toggleLoader(false, null);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //TODO: Adicionar lógica para compressão da imagem utilizando a biblioteca Compressor
     }
 
+    /**
+     *
+     * Método usado para preencher as views da tela, vinculando as imagens
+     * aos ImageViews e o tamanho delas ao TextView abaixo
+     *
+     * @param bitmap Bitmap imagem que vai ser exibida pelo ImageView
+     * @param imageView ImageView ImageView que vai exibir a imagem acima
+     * @param textView TextView campo de texto que vai exibir o tamanho atual da imagem
+     */
     @UiThread
     void setImage(Bitmap bitmap, ImageView imageView, TextView textView) {
         imageView.setImageBitmap(bitmap);
@@ -202,9 +174,7 @@ public class MainActivity extends AppCompatActivity implements Callback<String> 
 
     @Override
     public void onResponse(Call<String> call, Response<String> response) {
-        fileName = response.body();
-        fileNameTv.setText(fileName);
-        toggleLoader(false, null);
+        //TODO: Armazenar o nome do arquivo retornado e exibí-lo na tela
     }
 
     @Override
