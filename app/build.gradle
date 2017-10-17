@@ -23,10 +23,15 @@ def AAVersion = '4.3.1'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    /*
+    * As linhas 31 e 32 adicionam a biblioteca AndroidAnnotations ao projeto.
+    * Essa biblioteca facilita muito a construção e organização de código Android.
+    * Caso haja interesse, acesse www.androidannotations.org;
+    * */
     annotationProcessor "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
     compile 'com.android.support:appcompat-v7:26.+'
-    compile 'id.zelory:compressor:2.1.0'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'id.zelory:compressor:2.1.0'   // dependência do Compressor
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'       // dependencia do retrofit
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0' // dependencia do conversor usado pelo retrofit
 }
